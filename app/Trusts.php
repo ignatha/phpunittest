@@ -7,57 +7,27 @@ Namespace App;
  */
 class Trusts
 {
-    private $tmp = [];
-    private $op = 0;
 
-    public function getData($data)
+    public function trust($n, $data)
     {
-    	return $this->kurawa($data);
+       
+       $candidates = [];
+       print_r($data);
+       foreach ($data as $value) {
+            array_push($candidates,$value[1]);
+       }
+
+       $candidates = array_unique($candidates);
+       print_r($candidates);
+       
+       foreach ($data as $value) {
+               if (in_array($value[0], $candidates,TRUE)) {
+                    $key = array_search($value[0], $candidates);
+                    unset($candidates[$key]);   
+               }       
+       }
+
+       print_r($candidates);
     }
 
-    public function kurawa($data)
-    {
-
-    		$current_data = current($data);
-    		$currentKey = key($data);
-
-    		$next_data = next($data);
-    		$nextKey = key($data);
-    		$this->op++;
-    		if ($this->dictCheck($current_data,$next_data)) {
-    			unset($data[$currentKey],$data[$nextKey]);
-    			return $this->kurawa($data);
-    		}else{
-    			if (empty($data) && empty($this->tmp)) {
-    				return TRUE;
-    			}else{
-    				if (empty($data)) {
-    					if ($this->op > 100) {
-		    				return FALSE;
-		    			}
-		    			$data = $this->tmp;
-			    		$this->tmp = [];
-			    		return $this->kurawa($data);
-    				} else {
-    					array_push($this->tmp, $current_data);
-		    			unset($data[$currentKey]);
-		    			return $this->kurawa($data);
-    				}
-    			}
-    		}
-
-    }
-
-    public function dictCheck($a,$b){
-    	if($a === "{" && $b === "}")
-    	{
-    		return true;
-    	}elseif ($a === "(" && $b === ")") {
-    		return true;
-    	}elseif ($a === "[" && $b === "]") {
-    		return true;
-    	}else{
-    		return false;
-    	}
-    } 
 }
